@@ -53,7 +53,7 @@ public final class HttpError {
      */
     public static final HttpError INTERNAL_SERVER_ERROR = new HttpError(500, "Internal server error, please try again.");
 
-    private static final Map VALUE_MAP = new HashMap();
+    private static final Map<Integer, HttpError> VALUE_MAP = new HashMap<>();
 
     // put all elements in a Hash to obtain them key/value
     static {

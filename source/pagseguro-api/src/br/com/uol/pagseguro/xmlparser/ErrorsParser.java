@@ -46,9 +46,9 @@ public class ErrorsParser {
      * @throws SAXException
      * @throws IOException
      */
-    public static List readErrosXml(InputStream xml) throws ParserConfigurationException, SAXException, IOException {
+    public static List<Error> readErrosXml(InputStream xml) throws ParserConfigurationException, SAXException, IOException {
 
-        List errors = new ArrayList();
+        List<Error> errors = new ArrayList<>();
 
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -57,7 +57,7 @@ public class ErrorsParser {
         Document doc = dBuilder.parse(is);
 
         Element errorsElement = doc.getDocumentElement();
-        List errorElements = XMLParserUtils.getElements("error", errorsElement);
+        List<Element> errorElements = XMLParserUtils.getElements("error", errorsElement);
 
         Error error = null;
         for (int i = 0; i < errorElements.size(); i++) {

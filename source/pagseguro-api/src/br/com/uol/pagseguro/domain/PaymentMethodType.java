@@ -55,7 +55,7 @@ public final class PaymentMethodType {
      */
     public static final PaymentMethodType OI_PAGGO = new PaymentMethodType(5);
 
-    private static final Map VALUE_MAP = new HashMap();
+    private static final Map<Integer, Object> VALUE_MAP = new HashMap<>();
 
     static {
         VALUE_MAP.put(new Integer(CREDIT_CARD.getValue()), CREDIT_CARD);
@@ -70,7 +70,7 @@ public final class PaymentMethodType {
     }
 
     public static PaymentMethodType fromValue(Integer value) {
-        Iterator i = VALUE_MAP.keySet().iterator();
+        Iterator<Integer> i = VALUE_MAP.keySet().iterator();
 
         while (i.hasNext()) {
             Integer type = (Integer) i.next();

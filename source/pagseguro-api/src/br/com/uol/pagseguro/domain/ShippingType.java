@@ -47,7 +47,7 @@ public final class ShippingType {
      */
     public static final ShippingType NOT_SPECIFIED = new ShippingType(3);
 
-    private static final Map VALUE_MAP = new HashMap();
+    private static final Map<Integer, ShippingType> VALUE_MAP = new HashMap<>();
 
     static {
         VALUE_MAP.put(new Integer(PAC.getValue()), PAC);

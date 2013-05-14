@@ -44,13 +44,13 @@ public class PaymentRequest {
     /**
      * Products/items in this payment request
      */
-    private List items;
+    private List<Item> items;
 
     /**
      * Uri to where the PagSeguro payment page should redirect the user after the payment information is processed.
      * Typically this is a confirmation page on your web site.
      */
-    private URL redirectURL;
+    private String redirectURL;
 
     /**
      * Extra amount to be added to the transaction total
@@ -90,10 +90,18 @@ public class PaymentRequest {
     private BigInteger maxUses;
 
     /**
+     * Determines for which url PagSeguro will send the order related notifications codes.
+     * 
+     * Optional. Any change happens in the transaction status, a new notification request will be send
+     * to this url. You can use that for update the related order.
+     */
+    private String notificationURL;
+
+	/**
      * Initializes a new instance of the PaymentRequest class
      */
     public PaymentRequest() {
-        items = new ArrayList();
+        items = new ArrayList<>();
     }
 
     /**
@@ -193,7 +201,7 @@ public class PaymentRequest {
      * @return the items/products list in this payment request
      * @see Item
      */
-    public List getItems() {
+    public List<Item> getItems() {
         return items;
     }
 
@@ -205,7 +213,7 @@ public class PaymentRequest {
      * @param items
      * @return
      */
-    public PaymentRequest setItems(List items) {
+    public PaymentRequest setItems(List<Item> items) {
         this.items = items;
         return this;
     }
@@ -225,7 +233,7 @@ public class PaymentRequest {
     public void addItem(String id, String description, Integer quantity, BigDecimal amount, Long weight,
             BigDecimal shippingCost) {
         if (items == null) {
-            items = new ArrayList();
+            items = new ArrayList<>();
         }
         items.add(new Item(id, description, quantity, amount, weight, shippingCost));
     }
@@ -239,7 +247,7 @@ public class PaymentRequest {
      */
     public void addItem(Item item) {
         if (items == null) {
-            items = new ArrayList();
+            items = new ArrayList<>();
         }
         items.add(item);
     }
@@ -250,7 +258,7 @@ public class PaymentRequest {
      * 
      * @return the redirectURL
      */
-    public URL getRedirectURL() {
+    public String getRedirectURL() {
         return redirectURL;
     }
 
@@ -263,7 +271,7 @@ public class PaymentRequest {
      * @param redirectURL
      * @return
      */
-    public PaymentRequest setRedirectURL(URL redirectURL) {
+    public PaymentRequest setRedirectURL(String redirectURL) {
         this.redirectURL = redirectURL;
         return this;
     }
@@ -351,7 +359,6 @@ public class PaymentRequest {
      * @param cost
      * @return
      */
-    // TODO nome?
     public PaymentRequest setShippingCost(BigDecimal cost) {
         if (shipping == null) {
             shipping = new Shipping();
@@ -477,6 +484,39 @@ public class PaymentRequest {
         return this;
     }
 
+    /**
+     * Get the notification status url
+     * @return String
+     */
+    public String getNotificationURL() {
+		return notificationURL;
+	}
+
+    /**
+     * Sets the url that PagSeguro will send the new notifications statuses
+     * @param notificationURL
+     */
+	public void setNotificationURL(String notificationURL) {
+		this.notificationURL = notificationURL;
+	}
+	
+	/**
+	 * Add document for sender documents list
+	 * @param document
+	 */
+	public void addSenderDocument(SenderDocument document){
+		this.getSender().addDocument(document);
+	}
+	
+	/**
+	 * Add document for sender documents list
+	 * @param type
+	 * @param value
+	 */
+	public void addSenderDocument(String type, Long value){
+		this.getSender().addDocument(type, value);
+	}
+	
     /**
      * Calls the PagSeguro web service and register this request for payment
      * 

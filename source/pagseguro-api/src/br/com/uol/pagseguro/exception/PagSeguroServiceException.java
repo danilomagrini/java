@@ -32,7 +32,7 @@ public class PagSeguroServiceException extends Exception {
     /**
      * List of errors returned by the PagSeguro web service
      */
-    private List errors;
+    private List<Error> errors;
     
     /**
      *  
@@ -51,7 +51,7 @@ public class PagSeguroServiceException extends Exception {
      * @param errors
      * @param httpError
      */
-    public PagSeguroServiceException(List errors, HttpError httpError) {
+    public PagSeguroServiceException(List<Error> errors, HttpError httpError) {
         this.errors = errors;
         this.httpError = httpError;
     }
@@ -68,14 +68,15 @@ public class PagSeguroServiceException extends Exception {
     /**
      * @return the list of errors returned by the PagSeguro web service 
      */
-    public List getErrorList() {
+    public List<Error> getErrorList() {
 
         if (errors == null || errors.isEmpty()) {
             Error erro = new Error();
+            httpError = (httpError != null) ? httpError : HttpError.INTERNAL_SERVER_ERROR;
             erro.setCode(Integer.toString(httpError.getValue()));
             erro.setMessage(httpError.getMessage());
 
-            List listaErro = new ArrayList();
+            List<Error> listaErro = new ArrayList<>();
             listaErro.add(erro);
 
             return listaErro;
@@ -89,12 +90,12 @@ public class PagSeguroServiceException extends Exception {
      * 
      * @param errorList
      */
-    public void setErrorList(List errorList) {
+    public void setErrorList(List<Error> errorList) {
         this.errors = errorList;
     }
 
     public String toString() {
-        List listErrors = this.getErrorList();
+        List<Error> listErrors = this.getErrorList();
         StringBuffer errosMsg = new StringBuffer();
 
         for (Iterator iter = listErrors.iterator(); iter.hasNext();) {

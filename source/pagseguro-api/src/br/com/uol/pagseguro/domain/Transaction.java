@@ -96,10 +96,15 @@ public class Transaction {
     private Integer installmentCount;
 
     /**
+     * Items count
+     */
+    private Integer itemCount;
+    
+    /**
      * item/product list in this transaction
      * @see Item
      */
-    private List items;
+    private List<Item> items;
 
     /**
      * Payer information, who is sending money
@@ -326,8 +331,8 @@ public class Transaction {
     public Integer getInstallmentCount() {
         return installmentCount;
     }
-
-    /**
+    
+	/**
      * Sets the installment count in this transaction
      * 
      * @param installmentCount
@@ -337,10 +342,25 @@ public class Transaction {
     }
 
     /**
+     * Sets the items count
+     * @param itemCount
+     */
+    public void setItemCount(Integer itemCount) {
+		this.itemCount = itemCount;
+	}
+
+    /**
+     * @return the items/products count in this transaction
+     */
+    public Integer getItemCount() {
+        return itemCount == null ? 0 : itemCount;
+    }
+    
+    /**
      * @return the items/products list in this transaction
      * @see Item
      */
-    public List getItems() {
+    public List<Item> getItems() {
         return items;
     }
 
@@ -350,15 +370,8 @@ public class Transaction {
      * 
      * @param items
      */
-    public void setItems(List items) {
+    public void setItems(List<Item> items) {
         this.items = items;
-    }
-
-    /**
-     * @return the items/products count in this transaction
-     */
-    public Integer getItemCount() {
-        return items == null ? null : new Integer(items.size());
     }
 
     /**
@@ -399,18 +412,12 @@ public class Transaction {
 
     public String toString(){
         StringBuffer sb = new StringBuffer(256);
-        sb.append("Transaction(Code=");
-        sb.append(code);
-        sb.append(",Date=");
-        sb.append(date);
-        sb.append(",Reference=");
-        sb.append(reference);
-        sb.append(",Status=");
-        sb.append(status.getValue());
-        sb.append(",Email=");
-        sb.append(sender != null ? sender.getEmail() : null);
-        sb.append(",ItemsCount=");
-        sb.append(items != null ? items.size() : 0);
+        sb.append("Transaction(Code=" + getCode());
+        sb.append(",Date=" + getDate());
+        sb.append(",Reference=" + getReference());
+        sb.append(",Status=" + status.getValue());
+        sb.append(",Email=" + sender != null ? sender.getEmail() : null);
+        sb.append(",ItemsCount=" + getItemCount());
         sb.append(")");
     	return sb.toString();
     }

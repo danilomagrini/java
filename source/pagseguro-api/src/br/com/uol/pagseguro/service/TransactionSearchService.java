@@ -15,16 +15,16 @@
  */
 package br.com.uol.pagseguro.service;
 
+import java.net.HttpURLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import br.com.uol.pagseguro.domain.Credentials;
+import br.com.uol.pagseguro.domain.HttpError;
 import br.com.uol.pagseguro.domain.Transaction;
 import br.com.uol.pagseguro.domain.TransactionSearchResult;
 import br.com.uol.pagseguro.exception.PagSeguroServiceException;
-import br.com.uol.pagseguro.infra.HttpsURLConnectionUtil;
+import br.com.uol.pagseguro.infra.HttpURLConnectionUtil;
 import br.com.uol.pagseguro.logs.Logger;
 import br.com.uol.pagseguro.logs.PagSeguroLoggerFactory;
 import br.com.uol.pagseguro.properties.PagSeguroSystem;
@@ -73,22 +73,25 @@ public class TransactionSearchService {
             throw new IllegalArgumentException("transaction code can not be null");
         }
 
-        // calling transaction search web service
-        HttpsURLConnection connection = HttpsURLConnectionUtil.getHttpsGetConnection(
-                buildURLByCode(credentials, transactionCode), CONTENT_TYPE);
-
         try {
-            // parsing transaction
+        	
+        	// calling transaction search web service
+        	HttpURLConnection connection = HttpURLConnectionUtil.getHttpGetConnection(
+        			buildURLByCode(credentials, transactionCode), CONTENT_TYPE);
+
+        	// parsing transaction
             Transaction transaction = TransactionParser.readTransaction(connection.getInputStream());
 			log.info("TransactionSearchService.SearchByCode(transactionCode="
 					+ transactionCode + ") - end - " + transaction.toString());
+			
+			// disconnecting
+			connection.disconnect();
+			
             return transaction;
         } catch (Exception e) {
 			log.error("TransactionSearchService.SearchByCode(transactionCode="
 					+ transactionCode + ") - error", e);
             throw new RuntimeException(e);
-        }finally{
-        	connection.disconnect();
         }
     }
 
@@ -113,19 +116,30 @@ public class TransactionSearchService {
         
 		log.info("TransactionSearchService.SearchByDate(initialDate="
 				+ initialDateString + ", finalDate=" + finalDateString + ") - begin");
+		
+		// instantiating new TransactionResultSearch
+		TransactionSearchResult search = new TransactionSearchResult();
 
-        // call transaction search web service
-        HttpsURLConnection connection = HttpsURLConnectionUtil.getHttpsGetConnection(
-                buildURLByDate(credentials, initialDate, finalDate, page, maxPageResults), CONTENT_TYPE);
-
-        TransactionSearchResult search = new TransactionSearchResult();
         try {
-            // parsing PagSeguro response
-            TransactionSearchResultXMLHandler.getHandler(connection.getInputStream(), search);
-            
-            log.info("TransactionSearchService.SearchByDate(initialDate="
-    				+ initialDateString + ", finalDate=" + finalDateString + ") - end - "
-    				+ search);
+        	
+        	// call transaction search web service
+        	HttpURLConnection connection = HttpURLConnectionUtil.getHttpGetConnection(
+        			buildURLByDate(credentials, initialDate, finalDate, page, maxPageResults), CONTENT_TYPE);
+
+        	if (connection != null){
+        		// parsing PagSeguro response
+                TransactionSearchResultXMLHandler.getHandler(connection.getInputStream(), search);
+                
+                log.info("TransactionSearchService.SearchByDate(initialDate="
+        				+ initialDateString + ", finalDate=" + finalDateString + ") - end - "
+        				+ search);
+                
+                // disconnecting connection
+                connection.disconnect();
+        	}
+        	else {
+        		throw new PagSeguroServiceException();
+        	}
             
             return search;
             
@@ -134,8 +148,6 @@ public class TransactionSearchService {
     				+ initialDateString + ", finalDate=" + finalDateString + ") - error "
     				+ search, e);
             throw new RuntimeException(e);
-        } finally {
-        	connection.disconnect();
         }
 
     }

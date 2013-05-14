@@ -25,5 +25,5 @@ public abstract class Credentials {
 /**
  * @return a map of name value pairs that compose this set of credentials
  */
-public abstract Map getAttributes();
+	public abstract Map<String, String> getAttributes();
 }

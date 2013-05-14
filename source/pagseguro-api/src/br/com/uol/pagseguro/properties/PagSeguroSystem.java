@@ -25,6 +25,10 @@ import java.util.ResourceBundle;
 public class PagSeguroSystem {
 
     private static ResourceBundle resourceBundle;
+    
+    private static final String libVersion = "2.0.2";
+    
+    private static final String languageEngineDescription = System.getProperty("java.version") + ":" + System.getProperty("java.vendor");
 
     static {
         try {
@@ -61,5 +65,13 @@ public class PagSeguroSystem {
     public static String getPagSeguroEncoding() {
         return resourceBundle.getString("encoding");
     }
+
+	public static String getLibversion() {
+		return libVersion;
+	}
+
+	public static String getLanguageEnginedescription() {
+		return languageEngineDescription;
+	}
 
 }

@@ -66,6 +66,61 @@ public final class PaymentMethodCode {
     public static final PaymentMethodCode ELO_CREDIT_CARD = new PaymentMethodCode(107);
 
     /**
+     * PLENOCard
+     */
+    public static final PaymentMethodCode PLENO_CREDIT_CARD = new PaymentMethodCode(108); 
+    
+    /**
+     * PersonalCard
+     */
+    public static final PaymentMethodCode PERSONAL_CREDIT_CARD = new PaymentMethodCode(109);
+    
+    /**
+     * JCB
+     */
+    public static final PaymentMethodCode JCB_CREDIT_CARD = new PaymentMethodCode(110);
+    
+    /**
+     * Discover
+     */
+    public static final PaymentMethodCode DISCOVER_CREDIT_CARD = new PaymentMethodCode(111);
+    
+    /**
+     * BrasilCard
+     */
+    public static final PaymentMethodCode BRASIL_CREDIT_CARD = new PaymentMethodCode(112);
+    
+    /**
+     * FORTBRASIL
+     */
+    public static final PaymentMethodCode FORTBRASIL_CREDIT_CARD = new PaymentMethodCode(113);
+    
+    /**
+     * CARDBAN
+     */
+    public static final PaymentMethodCode CARDBAN_CREDIT_CARD = new PaymentMethodCode(114);
+    
+    /**
+     * VALECARD
+     */
+    public static final PaymentMethodCode VALECARD_CREDIT_CARD = new PaymentMethodCode(115);
+    
+    /**
+     * Cabal
+     */
+    public static final PaymentMethodCode CABAL_CREDIT_CARD = new PaymentMethodCode(116);
+    
+    /**
+     * Mais!
+     */
+    public static final PaymentMethodCode MAIS_CREDIT_CARD = new PaymentMethodCode(117);
+    
+    /**
+     * Avista
+     */
+    public static final PaymentMethodCode AVISTA_CREDIT_CARD = new PaymentMethodCode(118);
+    
+    /**
      * Bradesco - boleto
      */
     public static final PaymentMethodCode BRADESCO_BOLETO = new PaymentMethodCode(201);
@@ -106,6 +161,11 @@ public final class PaymentMethodCode {
     public static final PaymentMethodCode BANRISUL_ONLINE_TRANSFER = new PaymentMethodCode(306);
 
     /**
+     * HSBC on-line transfer 
+     */
+    public static final PaymentMethodCode HSBC_ONLINE_TRANSFER = new PaymentMethodCode(307);
+    
+    /**
      * PagSeguro account balance
      */
     public static final PaymentMethodCode PS_BALANCE = new PaymentMethodCode(401);
@@ -115,7 +175,10 @@ public final class PaymentMethodCode {
      */
     public static final PaymentMethodCode OI_PAGGO = new PaymentMethodCode(501);
 
-    private static final Map VALUE_MAP = new HashMap();
+    /**
+     * The values map
+     */
+    private static final Map<Integer, Object> VALUE_MAP = new HashMap<>();
 
     static {
         VALUE_MAP.put(new Integer(VISA_CREDIT_CARD.getValue()), VISA_CREDIT_CARD);
@@ -125,6 +188,17 @@ public final class PaymentMethodCode {
         VALUE_MAP.put(new Integer(HIPERCARD_CREDIT_CARD.getValue()), HIPERCARD_CREDIT_CARD);
         VALUE_MAP.put(new Integer(AURA_CREDIT_CARD.getValue()), AURA_CREDIT_CARD);
         VALUE_MAP.put(new Integer(ELO_CREDIT_CARD.getValue()), ELO_CREDIT_CARD);
+        VALUE_MAP.put(new Integer(PLENO_CREDIT_CARD.getValue()), PLENO_CREDIT_CARD);
+        VALUE_MAP.put(new Integer(PERSONAL_CREDIT_CARD.getValue()), PERSONAL_CREDIT_CARD);
+        VALUE_MAP.put(new Integer(JCB_CREDIT_CARD.getValue()), JCB_CREDIT_CARD);
+        VALUE_MAP.put(new Integer(DISCOVER_CREDIT_CARD.getValue()), DISCOVER_CREDIT_CARD);
+        VALUE_MAP.put(new Integer(BRASIL_CREDIT_CARD.getValue()), BRASIL_CREDIT_CARD);
+        VALUE_MAP.put(new Integer(FORTBRASIL_CREDIT_CARD.getValue()), FORTBRASIL_CREDIT_CARD);
+        VALUE_MAP.put(new Integer(CARDBAN_CREDIT_CARD.getValue()), CARDBAN_CREDIT_CARD);
+        VALUE_MAP.put(new Integer(VALECARD_CREDIT_CARD.getValue()), VALECARD_CREDIT_CARD);
+        VALUE_MAP.put(new Integer(CABAL_CREDIT_CARD.getValue()), CABAL_CREDIT_CARD);
+        VALUE_MAP.put(new Integer(MAIS_CREDIT_CARD.getValue()), MAIS_CREDIT_CARD);
+        VALUE_MAP.put(new Integer(AVISTA_CREDIT_CARD.getValue()), AVISTA_CREDIT_CARD);
         VALUE_MAP.put(new Integer(BRADESCO_BOLETO.getValue()), BRADESCO_BOLETO);
         VALUE_MAP.put(new Integer(SANTANDER_BOLETO.getValue()), SANTANDER_BOLETO);
         VALUE_MAP.put(new Integer(BRADESCO_ONLINE_TRANSFER.getValue()), BRADESCO_ONLINE_TRANSFER);
@@ -133,16 +207,17 @@ public final class PaymentMethodCode {
         VALUE_MAP.put(new Integer(BANCO_BRASIL_ONLINE_TRANSFER.getValue()), BANCO_BRASIL_ONLINE_TRANSFER);
         VALUE_MAP.put(new Integer(REAL_ONLINE_TRANSFER.getValue()), REAL_ONLINE_TRANSFER);
         VALUE_MAP.put(new Integer(BANRISUL_ONLINE_TRANSFER.getValue()), BANRISUL_ONLINE_TRANSFER);
+        VALUE_MAP.put(new Integer(HSBC_ONLINE_TRANSFER.getValue()), HSBC_ONLINE_TRANSFER);
         VALUE_MAP.put(new Integer(PS_BALANCE.getValue()), PS_BALANCE);
         VALUE_MAP.put(new Integer(OI_PAGGO.getValue()), OI_PAGGO);
     }
 
     public static PaymentMethodCode fromValue(Integer value) {
 
-        Iterator i = VALUE_MAP.keySet().iterator();
+        Iterator<Integer> i = VALUE_MAP.keySet().iterator();
 
         while (i.hasNext()) {
-            Integer type = (Integer) i.next();
+            Integer type = i.next();
             if (type.intValue() == value.intValue()) {
                 return (PaymentMethodCode) VALUE_MAP.get(type);
             }

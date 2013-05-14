@@ -78,7 +78,7 @@ public final class TransactionType {
      */
     public static final TransactionType POLITICAL_DONATION = new TransactionType(10);
 
-    private static final Map VALUE_MAP = new HashMap();
+    private static final Map<Integer, TransactionType> VALUE_MAP = new HashMap<>();
 
     static {
         VALUE_MAP.put(new Integer(PAYMENT.getValue()), PAYMENT);

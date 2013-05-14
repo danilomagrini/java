@@ -13,71 +13,125 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+
 package br.com.uol.pagseguro.domain;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import br.com.uol.pagseguro.util.StringUtil;
 
 /**
  * Represents the party on the transaction that is sending the money
  */
 public class Sender {
 
-    /** Sender name */
-    private String name;
+	/** Sender name */
+	private String name;
 
-    /** Sender email */
-    private String email;
+	/** Sender email */
+	private String email;
 
-    /** Sender phone */
-    private Phone phone;
+	/** Sender phone */
+	private Phone phone;
 
-    
-    /**
-     * Initializes a new instance of the Sender class 
-     */
-    public Sender() {
-    }
+	/** Sender documents */
+	private List<SenderDocument> documents;
+	
+	/**
+	 * Initializes a new instance of the Sender class 
+	 */
+	public Sender() {
+	}
 
-    /**
-     * Sets the Sender name
-     * @param name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
+	/**
+	 * Sets the Sender name
+	 * @param name
+	 */
+	public void setName(String name) {
+		this.name = StringUtil.formatString(name, 50, "");
+	}
 
-    /**
-     * @return the sender name
-     */
-    public String getName() {
-        return name;
-    }
+	/**
+	 * @return the sender name
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * Sets the Sender e-mail
-     * @param email
-     */
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    
-    /**
-     * @return the sender e-mail
-     */
-    public String getEmail() {
-        return email;
-    }
+	/**
+	 * Sets the Sender e-mail
+	 * @param email
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    /**
-     * Sets the sender phone
-     * @param phone
-     */
-    public void setPhone(Phone phone) {
-        this.phone = phone;
-    }
-    
-    /**
-     * @return the sender phone
-     */
-    public Phone getPhone() {
-        return phone;
-    }
+	/**
+	 * @return the sender e-mail
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * Sets the sender phone
+	 * @param phone
+	 */
+	public void setPhone(Phone phone) {
+		this.phone = phone;
+	}
+
+	/**
+	 * @return the sender phone
+	 */
+	public Phone getPhone() {
+		if (phone == null) {
+			phone = new Phone();
+		}
+		return phone;
+	}
+
+	/**
+	 * Gets sender documents list
+	 * @return the sender documents list
+	 */
+	public List<SenderDocument> getDocuments() {
+		if (documents == null) {
+			documents = new ArrayList<SenderDocument>();
+		}
+		return documents;
+	}
+
+	/**
+	 * Sets the sender documents list
+	 * @param documents
+	 */
+	public void setDocuments(List<SenderDocument> documents) {
+		this.documents = documents;
+	}
+
+	/**
+	 * Add a document for sender documents list
+	 * @param document
+	 */
+	public void addDocument(SenderDocument document){
+		this.getDocuments().add(document);
+	}
+	
+	/**
+	 * Add a document for sender documents list
+	 * @param type
+	 * @param value
+	 */
+	public void addDocument(String type, Long value){
+		this.getDocuments().add(new SenderDocument(type, value));
+	}
+
+	@Override
+	public String toString() {
+		return "Sender [name=" + name + ", email=" + email + ", phone=" + phone
+				+ ", documents=" + documents + "]";
+	}
+
 }

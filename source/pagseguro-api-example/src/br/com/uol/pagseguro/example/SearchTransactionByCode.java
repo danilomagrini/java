@@ -30,8 +30,8 @@ public class SearchTransactionByCode {
         Transaction transaction = null;
         try {
         	//Substitute the parameters below with your credentials (e-mail and token)
-            transaction = TransactionSearchService.searchByCode(new AccountCredentials("suporte@lojamodelo.com.br",
-            "95112EE828D94278BD394E91C4388F20"), transactionCode);
+            transaction = TransactionSearchService.searchByCode(new AccountCredentials("suporte@lojamodelo.com.br", "95112EE828D94278BD394E91C4388F20"), transactionCode);
+        	
         } catch (PagSeguroServiceException e) {
             System.err.println(e.toString());
         }

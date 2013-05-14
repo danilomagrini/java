@@ -20,6 +20,7 @@ import java.net.URL;
 
 import br.com.uol.pagseguro.domain.AccountCredentials;
 import br.com.uol.pagseguro.domain.Currency;
+import br.com.uol.pagseguro.domain.Documents;
 import br.com.uol.pagseguro.domain.PaymentRequest;
 import br.com.uol.pagseguro.domain.ShippingType;
 import br.com.uol.pagseguro.exception.PagSeguroServiceException;
@@ -30,7 +31,7 @@ public class CreatePayment {
      * Class with a main method to illustrate the usage of the domain class PaymentRequest
      */
     public static void main(String[] args) {
-
+    	
         // Instantiate a new payment request
         PaymentRequest paymentRequest = new PaymentRequest();
 
@@ -54,16 +55,24 @@ public class CreatePayment {
                 "Av. Brig. Faria Lima", "1384", "5o andar");
 
         // Sets your customer information.
-        paymentRequest.setSender("João Comprador", "comprador@uol.com.br", "11", "56273440");
+        paymentRequest.setSender("João   Comprador", "comprador@uol.com.br", "11", "56273440");
 
+        // Add a document for sender
+        paymentRequest.addSenderDocument(Documents.CPF, new Long("26242023318"));
+        
+        // Sets notificationURL information
+        paymentRequest.setNotificationURL("http://www.google.com.br");
+        
+        // Sets redirectURL
+        paymentRequest.setRedirectURL("http://www.uol.com.br");
+        
         try {
-            // Register this payment request in PagSeguro, to obtain the payment URL for redirect your customer.
-            URL paymentURL = paymentRequest.register(new AccountCredentials("suporte@lojamodelo.com.br",
-                    "95112EE828D94278BD394E91C4388F20"));
+        	// Register this payment request in PagSeguro, to obtain the payment URL for redirect your customer.
+            URL paymentURL = paymentRequest.register(new AccountCredentials("suporte@lojamodelo.com.br", "95112EE828D94278BD394E91C4388F20"));
             System.out.println(paymentURL);
         } catch (PagSeguroServiceException e) {
             System.err.println(e.toString());
-        }
+        } 
 
     }
 

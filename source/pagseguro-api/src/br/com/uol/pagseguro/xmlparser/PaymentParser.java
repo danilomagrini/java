@@ -34,8 +34,8 @@ import org.xml.sax.SAXException;
 
 import br.com.uol.pagseguro.domain.Item;
 import br.com.uol.pagseguro.domain.PaymentRequest;
-import br.com.uol.pagseguro.logs.PagSeguroDummyLogger;
 import br.com.uol.pagseguro.logs.Logger;
+import br.com.uol.pagseguro.logs.PagSeguroDummyLogger;
 import br.com.uol.pagseguro.logs.PagSeguroLoggerFactory;
 import br.com.uol.pagseguro.properties.PagSeguroSystem;
 
@@ -97,6 +97,33 @@ public class PaymentParser {
                     }
                     sender.appendChild(senderPhone);
                 }
+                
+                // <documents>
+                if (!paymentRequest.getSender().getDocuments().isEmpty()){
+                	
+                	Element documents = doc.createElement("documents");
+                	
+                	for (br.com.uol.pagseguro.domain.SenderDocument pagseguroDocument : paymentRequest.getSender().getDocuments()) {
+						Element document = XMLParserUtils.createElement(doc, "document", null);
+						
+						if (pagseguroDocument.getType() != null){
+							Element documentType = XMLParserUtils.createElement(doc, "type", pagseguroDocument.getType());
+							document.appendChild(documentType);
+						}
+						
+						if (pagseguroDocument.getValue() != null){
+							Element documentValue = XMLParserUtils.createElement(doc, "value", pagseguroDocument.getValue().toString());
+							document.appendChild(documentValue);
+						}
+						
+						// adding new document for documents list
+						documents.appendChild(document);
+					}
+                	
+                	// adding documents list for sender
+                	sender.appendChild(documents);
+                }
+                
                 checkout.appendChild(sender);
             }
 
@@ -254,6 +281,12 @@ public class PaymentParser {
                 checkout.appendChild(maxUses);
             }
 
+            // <notificationURL>
+            if (paymentRequest.getNotificationURL() != null){
+            	Element notificationURL = XMLParserUtils.createElement(doc, "notificationURL", paymentRequest.getNotificationURL().toString());
+            	checkout.appendChild(notificationURL);
+            }
+            
             doc.appendChild(checkout);
 
             TransformerFactory factory = TransformerFactory.newInstance();

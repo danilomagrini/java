@@ -36,6 +36,12 @@ public class Error {
     public Error() {
     }
 
+    
+    public Error(String code, String message){
+    	this.setCode(code);
+    	this.setMessage(message);
+    }
+    
     /**
      * @return the code
      */

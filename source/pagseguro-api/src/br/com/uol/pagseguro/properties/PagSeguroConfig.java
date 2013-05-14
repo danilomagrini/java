@@ -27,6 +27,10 @@ public class PagSeguroConfig {
 
     private static ResourceBundle resourceBundle;
 
+    private static String moduleVersion;
+    
+    private static String cmsVersion;
+    
     static {
         try {
             resourceBundle = ResourceBundle.getBundle("pagseguro-config", Locale.getDefault());
@@ -74,4 +78,20 @@ public class PagSeguroConfig {
 
     }
 
+	public static String getModuleVersion() {
+		return moduleVersion;
+	}
+
+	public static void setModuleVersion(String moduleVersion) {
+		PagSeguroConfig.moduleVersion = moduleVersion;
+	}
+
+	public static String getCmsVersion() {
+		return cmsVersion;
+	}
+
+	public static void setCmsVersion(String cmsVersion) {
+		PagSeguroConfig.cmsVersion = cmsVersion;
+	}
+    
 }

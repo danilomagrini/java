@@ -72,7 +72,7 @@ public final class TransactionStatus {
      */
     public static final TransactionStatus CANCELLED = new TransactionStatus(7);
 
-    private static final Map VALUE_MAP = new HashMap();
+    private static final Map<Integer, TransactionStatus> VALUE_MAP = new HashMap<>();
 
     static {
         VALUE_MAP.put(new Integer(INITIATED.getValue()), INITIATED);

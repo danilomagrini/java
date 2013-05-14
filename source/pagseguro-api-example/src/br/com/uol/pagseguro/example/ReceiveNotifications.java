@@ -33,8 +33,8 @@ public class ReceiveNotifications {
         Transaction transaction = null;
         try {
             // Check transaction
-            transaction = NotificationService.checkTransaction(new AccountCredentials("suporte@lojamodelo.com.br",
-                    "95112EE828D94278BD394E91C4388F20"), notificationCode);
+            transaction = NotificationService.checkTransaction(new AccountCredentials("suporte@lojamodelo.com.br", "95112EE828D94278BD394E91C4388F20"), notificationCode);
+        	
         } catch (PagSeguroServiceException e) {
             System.err.println(e.toString());
         }

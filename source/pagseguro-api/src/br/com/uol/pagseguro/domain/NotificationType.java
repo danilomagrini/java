@@ -33,7 +33,7 @@ public final class NotificationType {
      */
     public static final NotificationType TRANSACTION = new NotificationType("transaction");
 
-    private static final Map VALUE_MAP = new HashMap();
+    private static final Map<String, NotificationType> VALUE_MAP = new HashMap<>();
 
     static {
         VALUE_MAP.put(TRANSACTION.getValue(), TRANSACTION);

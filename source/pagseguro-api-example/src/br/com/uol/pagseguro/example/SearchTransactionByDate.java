@@ -24,6 +24,7 @@ import br.com.uol.pagseguro.domain.AccountCredentials;
 import br.com.uol.pagseguro.domain.TransactionSearchResult;
 import br.com.uol.pagseguro.domain.TransactionSummary;
 import br.com.uol.pagseguro.exception.PagSeguroServiceException;
+import br.com.uol.pagseguro.properties.PagSeguroConfig;
 import br.com.uol.pagseguro.service.TransactionSearchService;
 
 public class SearchTransactionByDate {
@@ -34,17 +35,16 @@ public class SearchTransactionByDate {
         TransactionSearchResult result = null;
         try {
             Calendar initialCalendar = Calendar.getInstance();
-            initialCalendar.set(2011, Calendar.JULY, 1, 0, 00);
+            initialCalendar.set(2013, Calendar.MAY, 1, 0, 00);
             Calendar finalCalendar = Calendar.getInstance();
-            finalCalendar.set(2011, Calendar.JULY, 26, 00, 00);
+            finalCalendar.set(2013, Calendar.MAY, 14, 00, 00);
 
             //Substitute the parameters below with your credentials (e-mail and token)
-            AccountCredentials credentials = new AccountCredentials("suporte@lojamodelo.com.br",
-                    "95112EE828D94278BD394E91C4388F20");
-
-            result = TransactionSearchService.searchByDate(credentials, initialCalendar.getTime(),
-                    finalCalendar.getTime(), new Integer(1), new Integer(10));
-        } catch (PagSeguroServiceException e) {
+            AccountCredentials credentials = new AccountCredentials("suporte@lojamodelo.com.br", "95112EE828D94278BD394E91C4388F20");
+            
+            result = TransactionSearchService.searchByDate(credentials, initialCalendar.getTime(), finalCalendar.getTime(), new Integer(1), new Integer(10));
+        } 
+        catch (PagSeguroServiceException e) {
             System.err.println(e.toString());
             return;
         }

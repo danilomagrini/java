@@ -38,12 +38,12 @@ import br.com.uol.pagseguro.domain.PaymentMethodCode;
 import br.com.uol.pagseguro.domain.PaymentMethodType;
 import br.com.uol.pagseguro.domain.Phone;
 import br.com.uol.pagseguro.domain.Sender;
+import br.com.uol.pagseguro.domain.SenderDocument;
 import br.com.uol.pagseguro.domain.Shipping;
 import br.com.uol.pagseguro.domain.ShippingType;
 import br.com.uol.pagseguro.domain.Transaction;
 import br.com.uol.pagseguro.domain.TransactionStatus;
 import br.com.uol.pagseguro.domain.TransactionType;
-import br.com.uol.pagseguro.logs.PagSeguroDummyLogger;
 import br.com.uol.pagseguro.logs.Logger;
 import br.com.uol.pagseguro.logs.PagSeguroLoggerFactory;
 import br.com.uol.pagseguro.properties.PagSeguroSystem;
@@ -79,153 +79,175 @@ public class TransactionParser {
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         
         InputSource is = new InputSource(xmlInputStream);
-        is.setEncoding(PagSeguroSystem.getPagSeguroEncoding());
+//        is.setEncoding(PagSeguroSystem.getPagSeguroEncoding());
         Document doc = dBuilder.parse(is);
+        		
         String tagValue = null;
 
         Element transactionElement = doc.getDocumentElement();
         Transaction transaction = new Transaction();
 
-        tagValue = XMLParserUtils.getTagValue("code", transactionElement);
-        if (tagValue != null) {
-            transaction.setCode(tagValue);
-        }
+        log.debug("Parsing transaction");
 
-		log.debug("Parsing transaction");
-
+        // parsing <transaction><date>
         tagValue = XMLParserUtils.getTagValue("date", transactionElement);
         if (tagValue != null) {
-            transaction.setDate(DateParserUTC.parse(tagValue));
+        	transaction.setDate(DateParserUTC.parse(tagValue));
         }
-
+        
+        // parsing <transaction><lastEventDate>
+        tagValue = XMLParserUtils.getTagValue("lastEventDate", transactionElement);
+        if (tagValue != null) {
+        	transaction.setLastEventDate(DateParserUTC.parse(tagValue));
+        }
+        
+        // parsing <transaction><code>
         tagValue = XMLParserUtils.getTagValue("code", transactionElement);
         if (tagValue != null) {
             transaction.setCode(tagValue);
         }
 
+        // parsing <transaction><reference>
         tagValue = XMLParserUtils.getTagValue("reference", transactionElement);
         if (tagValue != null) {
             transaction.setReference(tagValue);
         }
 
+        // parsing <transaction><type>
         tagValue = XMLParserUtils.getTagValue("type", transactionElement);
         if (tagValue != null) {
             transaction.setType(TransactionType.fromValue(Integer.valueOf(tagValue)));
         }
 
+        // parsing <transaction><status>
         tagValue = XMLParserUtils.getTagValue("status", transactionElement);
         if (tagValue != null) {
             transaction.setStatus(TransactionStatus.fromValue(Integer.valueOf(tagValue)));
         }
 
-        // paymentMethod
+        // parsing <transaction><paymentMethod>
         Element paymentMethodElement = XMLParserUtils.getElement("paymentMethod", transactionElement);
         if (paymentMethodElement != null) {
             PaymentMethod paymentMethod = new PaymentMethod();
 
+            // parsing <transaction><paymentMethod><type>
             tagValue = XMLParserUtils.getTagValue("type", paymentMethodElement);
             if (tagValue != null) {
                 paymentMethod.setType(PaymentMethodType.fromValue(Integer.valueOf(tagValue)));
             }
 
+            // parsing <transaction><paymentMethod><code>
             tagValue = XMLParserUtils.getTagValue("code", paymentMethodElement);
             if (tagValue != null) {
                 paymentMethod.setCode(PaymentMethodCode.fromValue(Integer.valueOf(tagValue)));
             }
+            
+            // setting transaction payment method
             transaction.setPaymentMethod(paymentMethod);
 
         }
 
+        // setting <transaction><grossAmount>
         tagValue = XMLParserUtils.getTagValue("grossAmount", transactionElement);
         if (tagValue != null) {
             transaction.setGrossAmount(new BigDecimal(tagValue));
         }
 
+        // setting <transaction><discountAmount>
         tagValue = XMLParserUtils.getTagValue("discountAmount", transactionElement);
         if (tagValue != null) {
             transaction.setDiscountAmount(new BigDecimal(tagValue));
         }
 
+        // setting <transaction><feeAmount>
         tagValue = XMLParserUtils.getTagValue("feeAmount", transactionElement);
         if (tagValue != null) {
             transaction.setFeeAmount(new BigDecimal(tagValue));
         }
 
+        // setting <transaction><netAmount>
         tagValue = XMLParserUtils.getTagValue("netAmount", transactionElement);
         if (tagValue != null) {
             transaction.setNetAmount(new BigDecimal(tagValue));
         }
 
+        // setting <transaction><extraAmount>
         tagValue = XMLParserUtils.getTagValue("extraAmount", transactionElement);
         if (tagValue != null) {
             transaction.setExtraAmount(new BigDecimal(tagValue));
         }
 
-        tagValue = XMLParserUtils.getTagValue("lastEventDate", transactionElement);
-        if (tagValue != null) {
-            transaction.setLastEventDate(DateParserUTC.parse(tagValue));
-        }
-
+        // setting <transaction><installmentCount>
         tagValue = XMLParserUtils.getTagValue("installmentCount", transactionElement);
         if (tagValue != null) {
             transaction.setInstallmentCount(Integer.valueOf(tagValue));
         }
 
-        // items
+        // setting <transaction><installmentCount>        
+        tagValue = XMLParserUtils.getTagValue("itemCount", transactionElement);
+        
+        // setting <transaction><items>
         Element itemsElement = XMLParserUtils.getElement("items", transactionElement);
         if (itemsElement != null) {
             List itElements = XMLParserUtils.getElements("item", itemsElement);
-            List items = new ArrayList();
-            Item item;
+            List<Item> items = new ArrayList<>();
+            
             for (int i = 0; i < itElements.size(); i++) {
                 Element itElement = (Element) itElements.get(i);
-                item = new Item();
+                
+                // setting <transaction><items><item>
+                Item item = new Item();
 
+                // setting <transaction><items><item><id>
                 tagValue = XMLParserUtils.getTagValue("id", itElement);
                 if (tagValue != null) {
                     item.setId(tagValue);
                 }
 
+                // setting <transaction><items><item><description>
                 tagValue = XMLParserUtils.getTagValue("description", itElement);
                 if (tagValue != null) {
                     item.setDescription(tagValue);
                 }
 
+                // setting <transaction><items><item><quantity>
                 tagValue = XMLParserUtils.getTagValue("quantity", itElement);
                 if (tagValue != null) {
                     item.setQuantity(Integer.valueOf(tagValue));
                 }
 
+                // setting <transaction><items><item><amount>
                 tagValue = XMLParserUtils.getTagValue("amount", itElement);
                 if (tagValue != null) {
                     item.setAmount(new BigDecimal(tagValue));
                 }
 
-                tagValue = XMLParserUtils.getTagValue("weight", itElement);
-                if (tagValue != null) {
-                    item.setWeight(Long.valueOf(tagValue));
-                }
+                // adding item for items list
                 items.add(item);
             }
+            
             transaction.setItems(items);
         }
 
-        // sender
+        // setting <transaction><sender>
         Element senderElement = XMLParserUtils.getElement("sender", transactionElement);
         if (senderElement != null) {
+        	
             Sender sender = new Sender();
 
+            // setting <transaction><sender><name>
             tagValue = XMLParserUtils.getTagValue("name", senderElement);
             if (tagValue != null) {
                 sender.setName(tagValue);
             }
 
+            // setting <transaction><sender><email>
             tagValue = XMLParserUtils.getTagValue("email", senderElement);
             if (tagValue != null) {
                 sender.setEmail(tagValue);
             }
 
-            // phone
+            // setting <transaction><sender><phone>
             Element phoneElement = XMLParserUtils.getElement("phone", senderElement);
             if (phoneElement != null) {
                 Phone phone = new Phone();
@@ -241,70 +263,119 @@ public class TransactionParser {
                 }
                 sender.setPhone(phone);
             }
+            
+            // setting <transaction><sender><documents>
+            Element documentsElements = XMLParserUtils.getElement("documents", transactionElement);
+            if (documentsElements != null) {
+                List documents = XMLParserUtils.getElements("document", documentsElements);
+                
+                for (int i = 0; i < documents.size(); i++) {
+                    
+                	// getting document Element
+                	Element docElement = (Element) documents.get(i);
+                    
+                	// creating new SenderDocument object
+                	SenderDocument senderDocument = new SenderDocument();
+                	
+                	// setting <transaction><sender><documents><document><type>
+                    tagValue = XMLParserUtils.getTagValue("type", docElement);
+                    if (tagValue != null) {
+                        senderDocument.setType(tagValue);
+                    }
+                    
+                    // setting <transaction><sender><documents><document><value>
+                    tagValue = XMLParserUtils.getTagValue("value", docElement);
+                    if (tagValue != null) {
+                        senderDocument.setValue(Long.parseLong(tagValue));
+                    }
+                    
+                    // adding document for sender documents list
+                    sender.getDocuments().add(senderDocument);
+                }
+            }
+            
             transaction.setSender(sender);
         }
 
-        // shipping
+        // setting <transaction><shipping>	
         Element shippingElement = XMLParserUtils.getElement("shipping", transactionElement);
         if (shippingElement != null) {
+        	
+        	// creating new Shipping object
             Shipping shipping = new Shipping();
-
+            
+            // setting <transaction><shipping><type>
             tagValue = XMLParserUtils.getTagValue("type", shippingElement);
             if (tagValue != null) {
                 shipping.setType(ShippingType.fromValue(Integer.valueOf(tagValue)));
             }
-
+            
+            // setting <transaction><shipping><cost>
             tagValue = XMLParserUtils.getTagValue("cost", shippingElement);
             if (tagValue != null) {
                 shipping.setCost(new BigDecimal(tagValue));
             }
-
-            // address
+            
+            // setting <transaction><shipping><address>
             Element addressElement = XMLParserUtils.getElement("address", shippingElement);
             if (addressElement != null) {
-                Address address = new Address();
-
+                
+            	// creating new Address object
+            	Address address = new Address();
+                
+            	// setting <transaction><shipping><address><street>
                 tagValue = XMLParserUtils.getTagValue("street", addressElement);
                 if (tagValue != null) {
                     address.setStreet(tagValue);
                 }
-
+                
+                // setting <transaction><shipping><address><number>
                 tagValue = XMLParserUtils.getTagValue("number", addressElement);
                 if (tagValue != null) {
                     address.setNumber(tagValue);
                 }
-
+                
+                // setting <transaction><shipping><address><complement>
                 tagValue = XMLParserUtils.getTagValue("complement", addressElement);
                 if (tagValue != null) {
                     address.setComplement(tagValue);
                 }
-
-                tagValue = XMLParserUtils.getTagValue("city", addressElement);
-                if (tagValue != null) {
-                    address.setCity(tagValue);
-                }
-
-                tagValue = XMLParserUtils.getTagValue("state", addressElement);
-                if (tagValue != null) {
-                    address.setState(tagValue);
-                }
-
+                
+                // setting <transaction><shipping><address><district>
                 tagValue = XMLParserUtils.getTagValue("district", addressElement);
                 if (tagValue != null) {
                     address.setDistrict(tagValue);
                 }
-
+                
+                // setting <transaction><shipping><address><postalCode>
                 tagValue = XMLParserUtils.getTagValue("postalCode", addressElement);
                 if (tagValue != null) {
                     address.setPostalCode(tagValue);
                 }
-
+                
+                // setting <transaction><shipping><address><city>
+                tagValue = XMLParserUtils.getTagValue("city", addressElement);
+                if (tagValue != null) {
+                    address.setCity(tagValue);
+                }
+                
+                // setting <transaction><shipping><address><state>
+                tagValue = XMLParserUtils.getTagValue("state", addressElement);
+                if (tagValue != null) {
+                    address.setState(tagValue);
+                }
+                
+                // setting <transaction><shipping><address><country>
                 tagValue = XMLParserUtils.getTagValue("country", addressElement);
                 if (tagValue != null) {
                     address.setCountry(tagValue);
                 }
+                
+                // setting address for shipping object
                 shipping.setAddress(address);
             }
+            
+            // setting <transaction><shipping>
             transaction.setShipping(shipping);
         }
 

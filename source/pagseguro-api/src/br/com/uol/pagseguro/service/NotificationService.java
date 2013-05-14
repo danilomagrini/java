@@ -15,12 +15,12 @@
  */
 package br.com.uol.pagseguro.service;
 
-import javax.net.ssl.HttpsURLConnection;
+import java.net.HttpURLConnection;
 
 import br.com.uol.pagseguro.domain.Credentials;
 import br.com.uol.pagseguro.domain.Transaction;
 import br.com.uol.pagseguro.exception.PagSeguroServiceException;
-import br.com.uol.pagseguro.infra.HttpsURLConnectionUtil;
+import br.com.uol.pagseguro.infra.HttpURLConnectionUtil;
 import br.com.uol.pagseguro.logs.Logger;
 import br.com.uol.pagseguro.logs.PagSeguroLoggerFactory;
 import br.com.uol.pagseguro.properties.PagSeguroSystem;
@@ -62,7 +62,7 @@ public class NotificationService {
         log.info("NotificationService.CheckTransaction(notificationCode=" + notificationCode + ") - begin");
 
         // calling transaction notifications webservice
-        HttpsURLConnection connection = HttpsURLConnectionUtil.getHttpsGetConnection(
+        HttpURLConnection connection = HttpURLConnectionUtil.getHttpGetConnection(
                 buildURL(credentials, notificationCode), CONTENT_TYPE);
 
         try {

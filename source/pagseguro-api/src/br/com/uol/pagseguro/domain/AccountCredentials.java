@@ -53,8 +53,8 @@ public class AccountCredentials extends Credentials {
     /* (non-Javadoc)
      * @see br.com.uol.pagseguro.domain.Credentials#getAttributes()
      */
-    public Map getAttributes() {
-        Map attributeMap = new HashMap(3);
+    public Map<String, String> getAttributes() {
+        Map<String, String> attributeMap = new HashMap<>(3);
         attributeMap.put("email", this.email);
         attributeMap.put("token", this.token);
         return attributeMap;

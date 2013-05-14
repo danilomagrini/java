@@ -15,16 +15,15 @@
  */
 package br.com.uol.pagseguro.service;
 
+import java.net.HttpURLConnection;
 import java.net.URL;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import br.com.uol.pagseguro.domain.Credentials;
 import br.com.uol.pagseguro.domain.PaymentRequest;
 import br.com.uol.pagseguro.exception.PagSeguroServiceException;
-import br.com.uol.pagseguro.infra.HttpsURLConnectionUtil;
-import br.com.uol.pagseguro.logs.PagSeguroDummyLogger;
+import br.com.uol.pagseguro.infra.HttpURLConnectionUtil;
 import br.com.uol.pagseguro.logs.Logger;
+import br.com.uol.pagseguro.logs.PagSeguroDummyLogger;
 import br.com.uol.pagseguro.logs.PagSeguroLoggerFactory;
 import br.com.uol.pagseguro.properties.PagSeguroSystem;
 import br.com.uol.pagseguro.util.UrlUtil;
@@ -76,7 +75,7 @@ public class PaymentService {
         String xml = PaymentParser.writePaymentXml(paymentRequest);
 
         // calling payment web service
-        HttpsURLConnection connection = HttpsURLConnectionUtil.getHttpsPostConnection(buildUrl(credentials, paymentRequest),
+        HttpURLConnection connection = HttpURLConnectionUtil.getHttpPostConnection(buildUrl(credentials, paymentRequest),
                 URL_CONTENT_TYPE + "; charset=" + CHARSET, xml);
 
         try {
